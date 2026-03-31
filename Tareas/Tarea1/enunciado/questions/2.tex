@@ -1,0 +1,32 @@
+En esta pregunta usamos la siguiente notación que será utilizada en el
+curso. Dados dos strings $u, v$, el string $u \| v$ se define como la
+concatenación de $u$ con $v$. Además, dados dos strings binarios $u,
+v$ del mismo largo, $u \oplus v$ es el string binario que resulta de
+tomar el XOR de $u$ con $v$ componente a componente (lo cual
+corresponde a tomar suma en módulo 2). Por ejemplo, si $u = 00100$ y
+$v = 11110$, entonces $u \| v = 0010011110$ y $u \oplus v = 11010$.
+
+
+Sea $n$ un número natural, y suponga que $\{f_k\}_{k \in \{0,1\}^n}$
+es una familia de funciones tales que $f_k
+: \{0,1\}^n \to \{0,1\}^n$. Note que estas funciones no son
+necesariamente biyectivas. A partir de esta familia definimos un
+esquema criptográfico $(\textit{Gen}, \textit{Enc}, \textit{Dec})$
+sobre los espacios $\mathcal{M} = \mathcal{C} = \mathcal{K}
+= \{0,1\}^{2n}$. En particular, la función de encriptación
+$\textit{Enc}$ es definida de la siguiente forma considerando un
+mensaje $m \in \{0,1\}^{2n}$ tal que $m = m_1 \| m_2$ con $m_1,
+m_2 \in \{0,1\}^n$, y una clave $k \in \{0,1\}^{2n}$ tal que $k =
+k_1 \| k_2$ con $k_1, k_2 \in \{0,1\}^n$:
+\begin{align*}
+\textit{Enc}_k(m) \ = \ (m_1 \oplus f_{k_1}(m_2)) \| (m_2 \oplus f_{k_2}(m_1 \oplus f_{k_1}(m_2))). 
+\end{align*}
+En este problema usted debe responder las siguientes preguntas.
+\begin{enumerate}
+\item {[2 puntos]} Indique como se define la función $\textit{Dec}$. Es decir, dado una clave $k \in \{0,1\}^{2n}$ y un mensaje cifrado $c \in \{0,1\}^{2n}$, indique cómo se calcula el texto plano $m$ tal que $\textit{Enc}_k(m) = c$.
+
+\item {[4 puntos]} Demuestre que el esquema $(\textit{Gen}, \textit{Enc}, \textit{Dec})$ no es una pseudo-random permutation (PRP) con 2 rondas.  
+\end{enumerate}
+Note que (b) muestra que $(\textit{Gen}, \textit{Enc}, \textit{Dec})$
+no es una PRP independientemente de las propiedades que cumpla la
+familia de funciones $\{f_k\}$.

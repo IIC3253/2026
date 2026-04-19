@@ -1,0 +1,31 @@
+%!TEX root = ../main/main.tex
+
+Responda las siguientes preguntas.
+\begin{enumerate}
+\item {[3 puntos]} Sea $\mathcal{M}=\mathcal{K}=\mathcal{C}=\{0, 1\}^n$ y considere el esquema criptográfico $(\textit{Gen}, \textit{Enc}, \textit{Dec})$ donde $\textit{Enc}$ y $\textit{Dec}$ son definidos tal como en OTP, pero $\textit{Gen}$ \textbf{no} es la distribución uniforme. Demuestre que este esquema criptográfico no es perfectamente secreto.
+
+\item {[3 puntos]} Formalice la siguiente afirmación y demuestre que un sistema criptográfico la satisface si y sólo si dicho esquema cumple que es perfectamente secreto:
+\begin{center}
+  \it{La probabilidad de ver un texto cifrado $c\in \mathcal{C}$ sin conocimiento previo es igual a la probabilidad de ver $c$ conociendo el mensaje enviado de antemano.}
+  \end{center}
+\end{enumerate}
+
+\medskip
+
+\paragraph{Corrección.} La asignación de puntajes para cada pregunta de este problema es la siguiente.
+\begin{enumerate}
+  \item
+    \begin{itemize}
+      \item {[1 punto]} Usa una definición más débil de \emph{perfectamente secreto} en la demostración; para dicha definición la demostración es correcta.
+      \item {[2 puntos]} Usa la definición correcta y la demostración tiene sentido pero presenta algún problema. Por ejemplo, no cuantifica correctamente los elementos de la demostración, como los textos cifrados o la distribución de probabilidad $\mathbb{D}$ sobre los textos planos.
+      \item {[3 puntos]} Usa la definición correcta de \emph{perfectamente secreto} y la demostración es correcta.
+    \end{itemize}
+  \item
+    \begin{itemize}
+      \item {[1 punto]} La formalización es correcta, pero la demostración presenta muchos problemas o es evidentemente incorrecta.
+      \item {[2 puntos]} La formalización es correcta, pero la demostración es válida en una sola dirección.
+      \item {[3 puntes]} La formalización es correcta, y la demostración es válida en ambas direcciones.
+    \end{itemize}
+\end{enumerate}
+
+\medskip

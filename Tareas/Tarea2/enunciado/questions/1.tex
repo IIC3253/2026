@@ -115,6 +115,7 @@ print(f'Texto cifrado    : {c2}')
 print(f'Texto descifrado : {d2}\n')
 print(f'Texto plano      : {m3}')
 print(f'Texto cifrado    : {c3}')
+print(f'IV               : {iv}')
 print(f'Texto descifrado : {d3}')
 \end{python}
 El resultado de utilizar este código debería ser el siguiente:
@@ -133,9 +134,12 @@ Texto cifrado    : b'(\xf9\xb8\x1b\xe1E\xf1V_pd\xe6\x1a0=\xb3\xb0dL\xc38\xd2\x19
 Texto descifrado : b'Este es un mensaje de largo arbitrario'
 
 Texto plano      : b'Este es un mensaje de largo arbitrario'
-Texto cifrado    : b'}#\x96\x04\x1c\xd0I4D\xde\t\x94\xfbfq\xbfvR;\x16U\x94\x19\x16\xd3
-                     \x8e\x9d\xe3(\x83\x0c\xd2\x19\xdc\x9a\xf8\xec\xca\xee`\xdb\x18g\x8e
-                     rC?\xb2f\x83\xa6Y\x05\xa3\xe9J\x10o\x8f\xf7\x98\xe7\x8a\x11'
+Texto cifrado    : b'\xec\x84h\xdf\xe0\x86\x8c_(\xf4\xae+\xc1\x19/Sj`\x01\xfd,_\x1e\xf6
+                     >#^\xbc\xf2\xb33\x88\xdcs\xb6F\xf6\x17\x1e\xb8M3\xc2t\x9e\xc4\x142
+                     \xf0\xaf\x150G\xc6\xf7I\xac\xb9\x87\x0c\xdaY1\xfe'
+IV               : b'\xa1\xa8\x11C\xcd\xc7ig\x1en\x7f\xc64\x93\x93J@'\xa3\xe5U\x99f\xbb
+                     \x13\xdb\xbe\x9b\xeax\xa6^\x1d\xa4\xceR@Jcd\x1e\xb4na\x19\xa9r\xb0
+                     \xd6z\x15[\x7fhS>f\xe6$\x1f\xcc+\xc7\xdf'
 Texto descifrado : b'Este es un mensaje de largo arbitrario'
 \end{verbatim}
 }

@@ -26,11 +26,11 @@ En esta pregunta usted debe implementar en Python una clase \texttt{Feistel} que
 
 \item Un constructor que recibe el largo del bloque, el número de rondas, la función hash que se utilizará en la red de Feistel, y la clave secreta.
 
-\item Una función \texttt{enc\_block} que cifra un mensaje \texttt{m} de largo \texttt{block\_length} utilizando la clave \texttt{secret\_key}. \texttt{enc\_block} implementa la función  
+\item Una función \texttt{enc\_block} que cifra un mensaje \texttt{m} de largo \texttt{block\_length} utilizando la clave \texttt{secret\_key}. \texttt{enc\_block} implementa la función
   $\Enc_{\texttt{secret\_key}}$ descrita anteriormente, y no realiza padding para calcular el cifrado.
 
 \item Una función \texttt{dec\_block} que descifra un mensaje \texttt{c} de largo \texttt{block\_length} utilizando la clave \texttt{secret\_key}. \texttt{dec\_block} implementa la
-  inversa de la función $\Enc_{\texttt{secret\_key}}$ descrita anteriormente. 
+  inversa de la función $\Enc_{\texttt{secret\_key}}$ descrita anteriormente.
 
 \item Una función \texttt{key\_schedule} que genera la clave para la ronda \texttt{i} de la red de Feistel. Para implementar esta función use la instrucción
 \texttt{str(i).encode()} para transformar \texttt{i} en una secuencia de bytes.
@@ -58,19 +58,19 @@ class Feistel:
         secret_key: bytes,
     ) -> None:
         pass
-        
+
     def enc_block(self, m: bytes) -> bytes:
         pass
-    
+
     def dec_block(self, c: bytes) -> bytes:
-        pass      
+        pass
 
     def key_schedule(self, i: int) -> bytes:
-        pass    
-        
+        pass
+
     def pad(self, m: bytes) -> bytes:
         pass
-        
+
     def unpad(self, m: bytes) -> bytes:
         pass
 
@@ -122,24 +122,24 @@ El resultado de utilizar este código debería ser el siguiente:
 {\small
 \begin{verbatim}
 Texto plano      : b'1234567890123456789012345678901234567890123456789012345678901234'
-Texto cifrado    : b'0\xa6\x9c)\xe4\xf9\x04\xbb\xb7\xebS\x98^\x1c5\x1at1\xd7\xc8\xde\xf4
-                     \xac\x8e\x08\x95/\x07\x0f\xac\xc2\xf5\xba\x89\xf3Z\xe1\x12\xf5\x10o
-                     \xea\xe2!\xe0\xfe\xfd++\x01\xd7\xb8C\xa9\xc9$\xcb\xbfG\xfdj\xa8uq'
+Texto cifrado    : b'0\xa6\x9c)\xe4\xf9\x04\xbb\xb7\xebS\x98^\x1c5\x1at1\xd7\xc8\xde
+                     \xf4\xac\x8e\x08\x95/\x07\x0f\xac\xc2\xf5\xba\x89\xf3Z\xe1\x12\xf5
+                     \x10o\xea\xe2!\xe0\xfe\xfd++\x01\xd7\xb8C\xa9\xc9$\xcb\xbfG\xfdj\xa8uq'
 Texto descifrado : b'1234567890123456789012345678901234567890123456789012345678901234'
 
 Texto plano      : b'Este es un mensaje de largo arbitrario'
-Texto cifrado    : b'(\xf9\xb8\x1b\xe1E\xf1V_pd\xe6\x1a0=\xb3\xb0dL\xc38\xd2\x19\xd0b\xfd
-                     Tw\xf71\xc6\xb4\xecn\xa9\xceA1P\xf7\x05\xd1\x04\xaa\x81\xfeQix0k\xd9}
-                     \xfbeI\xce\x1e\xf5\xdd\\\xfeT\xc2'
+Texto cifrado    : b'\xf7\x80.~\x01\xb7\xf2\xc4\xd6\xb1I\x125\xae\xe3\xb9\x8dq\xbcP\x14
+                     \xf7\x84\xaf\x94\x83\xa9%\x17\xa2?\xeet\xc9=\xb0L+\x08\x04q\x14J\x06
+                     \\\x18\xbc\xa9t\xdc\x87\xe0\xffx\xa0s\xb7\x17\xca\x08\xd0_\xde\xdb'
 Texto descifrado : b'Este es un mensaje de largo arbitrario'
 
 Texto plano      : b'Este es un mensaje de largo arbitrario'
-Texto cifrado    : b'\xec\x84h\xdf\xe0\x86\x8c_(\xf4\xae+\xc1\x19/Sj`\x01\xfd,_\x1e\xf6
-                     >#^\xbc\xf2\xb33\x88\xdcs\xb6F\xf6\x17\x1e\xb8M3\xc2t\x9e\xc4\x142
-                     \xf0\xaf\x150G\xc6\xf7I\xac\xb9\x87\x0c\xdaY1\xfe'
-IV               : b'\xa1\xa8\x11C\xcd\xc7ig\x1en\x7f\xc64\x93\x93J@'\xa3\xe5U\x99f\xbb
-                     \x13\xdb\xbe\x9b\xeax\xa6^\x1d\xa4\xceR@Jcd\x1e\xb4na\x19\xa9r\xb0
-                     \xd6z\x15[\x7fhS>f\xe6$\x1f\xcc+\xc7\xdf'
+Texto cifrado    : b'V.K\x04\x92\x84\x16yS\xccI\xf1\x01\xaaX\x1a\x8fW{\x8e=HaJ\x85\x12$\xa8
+                     \x93;X\xf5\x98\x8c\xaa8\x82Az\x14/l'\x10\xdf\t{\xcfk\xcd\xba\ng\xed6
+                     \xbe\xeb\xa8,\x15\xe3\x9e\xdb@'
+IV               : b'K\xe55\x7fng\x9cJ\x8c\xbez\xd5k\xe0\x1e\xe2\x19\x92\xe3u\xc5\x88/#\xc4
+                     !G(\x16\xf8w\xc6\x96\x94tS*|+\x16e6\xf0\x1c\x96\x86\xdbZp\xe1\xf3(\xdf
+                     \xb6iE[\xfa\x1f\xdd6\xae\x07\xc0'
 Texto descifrado : b'Este es un mensaje de largo arbitrario'
 \end{verbatim}
 }

@@ -1,0 +1,103 @@
+En esta pregunta usamos la siguiente notación que será utilizada en el
+curso. Dados dos strings $u, v$, el string $u \| v$ se define como la
+concatenación de $u$ con $v$. Además, dados dos strings binarios $u,
+v$ del mismo largo, $u \oplus v$ es el string binario que resulta de
+tomar el XOR de $u$ con $v$ componente a componente (lo cual
+corresponde a tomar suma en módulo 2). Por ejemplo, si $u = 00100$ y
+$v = 11110$, entonces $u \| v = 0010011110$ y $u \oplus v = 11010$.
+
+
+Sea $n$ un número natural, y suponga que $\{f_k\}_{k \in \{0,1\}^n}$
+es una familia de funciones tales que $f_k
+: \{0,1\}^n \to \{0,1\}^n$. Note que estas funciones no son
+necesariamente biyectivas. A partir de esta familia definimos un
+esquema criptográfico $(\textit{Gen}, \textit{Enc}, \textit{Dec})$
+sobre los espacios $\mathcal{M} = \mathcal{C} = \mathcal{K}
+= \{0,1\}^{2n}$. En particular, la función de encriptación
+$\textit{Enc}$ es definida de la siguiente forma considerando un
+mensaje $m \in \{0,1\}^{2n}$ tal que $m = m_1 \| m_2$ con $m_1,
+m_2 \in \{0,1\}^n$, y una clave $k \in \{0,1\}^{2n}$ tal que $k =
+k_1 \| k_2$ con $k_1, k_2 \in \{0,1\}^n$:
+\begin{align*}
+\textit{Enc}_k(m) \ = \ (m_1 \oplus f_{k_1}(m_2)) \| (m_2 \oplus f_{k_2}(m_1 \oplus f_{k_1}(m_2))). 
+\end{align*}
+En este problema usted debe responder las siguientes preguntas.
+\begin{enumerate}
+\item {[2 puntos]} Indique como se define la función $\textit{Dec}$. Es decir, dado una clave $k \in \{0,1\}^{2n}$ y un mensaje cifrado $c \in \{0,1\}^{2n}$, indique cómo se calcula el texto plano $m$ tal que $\textit{Enc}_k(m) = c$.
+
+\item {[4 puntos]} Demuestre que el esquema $(\textit{Gen}, \textit{Enc}, \textit{Dec})$ no es una pseudo-random permutation (PRP) con 2 rondas.  
+\end{enumerate}
+Note que (b) muestra que $(\textit{Gen}, \textit{Enc}, \textit{Dec})$
+no es una PRP independientemente de las propiedades que cumpla la
+familia de funciones $\{f_k\}$.
+
+\paragraph{Solución.}                                                                                                                
+\begin{enumerate}                                                                                                                   
+  \item Sea $c \in \{0,1\}^{2n}$ un mensaje cifrado tal que $c = c_1 \| c_2$ con $c_1,
+c_2 \in \{0,1\}^n$, y sea $k \in \{0,1\}^{2n}$ una clave tal que $k =
+k_1 \| k_2$ con $k_1, k_2 \in \{0,1\}^n$. Para calcular un mensaje $m$ tal que $\textit{Enc}_k(m) = c$ realizamos los siguientes cálculos:
+\begin{align*}
+m_1 \ = \ &c_1 \oplus f_{k_1}(c_2 \oplus f_{k_2}(c_1))\\
+m_2 \ = \ &c_2 \oplus f_{k_2}(c_1)\\
+m \ = \ &m_1 \| m_2
+\end{align*}
+Para terminar esta parte de la pregunta tenemos que demostrar que $\textit{Enc}_k(m) = c$:
+\begin{align*}
+\textit{Enc}_k(m) \ = \ &\textit{Enc}_k(m_1 \| m_2)\\
+\ = \ &(m_1 \oplus f_{k_1}(m_2)) \| (m_2 \oplus f_{k_2}(m_1 \oplus f_{k_1}(m_2)))\\
+\ = \ &(c_1 \oplus f_{k_1}(c_2 \oplus f_{k_2}(c_1)) \oplus f_{k_1}(c_2 \oplus f_{k_2}(c_1))) \|\\
+&(c_2 \oplus f_{k_2}(c_1) \oplus f_{k_2}(c_1 \oplus f_{k_1}(c_2 \oplus f_{k_2}(c_1)) \oplus f_{k_1}(c_2 \oplus f_{k_2}(c_1))))\\
+\ = \ & c_1 \| (c_2 \oplus f_{k_2}(c_1) \oplus f_{k_2}(c_1))\\
+\ = \ & c_1 \| c_2\\
+\ = \ & c
+\end{align*}
+
+\item Considere la definición de PRP dada en el curso, y suponga que $n \geq 1$. Para demostrar que el esquema definido en esta pregunta no es una PRP con $2$
+rondas, usamos un adversario que ejecuta los siguientes pasos:
+\begin{itemize}
+  \item El adversario entrega $y = 0^{n} \| 0^n$ y $z = 1^n \| 0^n$ al verificador. El adversario recibe como respuesta $f(y)$ y 
+    $f(z)$.
+
+  \item Suponiendo que $f(y) = y_1 \| y_2$ con $y_1, y_2 \in \{0,1\}^n$, y
+$f(z) = z_1 \| z_2$ con $z_1, z_2 \in \{0,1\}^n$, el adversario verifica si $z_1 = 1^n \oplus y_1$.
+    Si esta condición se cumple, entonces el adversario
+    indica que $b=0$, sino indica que $b=1$.
+\end{itemize}
+Necesitamos calcular la probabilidad de que el adversario gane el
+juego, lo cual está dado por la siguiente expresión:
+\begin{align*}
+  \Pr(&\text{Adversario gane el juego}) \ =\\
+  &\Pr(\text{Adversario gane el juego} \mid b=0) \cdot \Pr(b=0) \ +\\
+  &\hspace{152pt} \Pr(\text{Adversario gane el juego} \mid b=1) \cdot \Pr(b=1) \ =\\
+  &\frac{1}{2} \cdot \Pr(\text{Adversario gane el juego} \mid b=0) + \frac{1}{2} \cdot \Pr(\text{Adversario gane el juego} \mid b=1).
+\end{align*}
+Si $b = 0$, entonces el verificador debe haber encriptado los mensajes
+$y$, $z$ con una clave $k \in \{0,1\}^{2n}$ tal que $k = k_1 \| k_2$ con $k_1, k_2 \in \{0,1\}^n$. En particular, se debe tener que:
+\begin{align*}
+y_1 \ = \ &0^n \oplus f_{k_1}(0^n) \ = \ f_{k_1}(0^n)\\ 
+y_2 \ = \ &0^n \oplus f_{k_2}(0^n \oplus f_{k_1}(0^n)) \ = \ f_{k_2}(f_{k_1}(0^n))\\ 
+z_1 \ = \ &1^n \oplus f_{k_1}(0^n)\\
+z_2 \ = \ &0^n \oplus f_{k_2}(1^n \oplus f_{k_1}(0^n)) \ = \ f_{k_2}(1^n \oplus f_{k_1}(0^n)) 
+\end{align*}
+Así, se deduce que $z_1 = 1^n \oplus y_1$, y por lo tanto el adversario elige $b = 0$ y gana el juego. Se concluye
+que $ \Pr(\text{Adversario gane el juego} \mid b=0) = 1$.  Si $b = 1$,
+entonces el verificador escoge al azar una permutación $\pi :
+\{0,1\}^{2n} \to \{0,1\}^{2n}$ y responde en el juego con el valor $f(y) =
+\pi(y)$ y $f(z) = \pi(z)$. En este caso, tenemos que el adversario pierde el juego si $z_1 = 1^n \oplus y_1$.
+Vale decir,
+\begin{align*}
+  & \Pr(\text{Adversario pierda el juego} \mid b=1)\\
+  & \hspace{100pt} = \ \Pr_{\pi}(\pi(y) = y_1 \| y_2 \wedge \pi(z) = z_1 \| z_2 \wedge z_1 = 1^n \oplus y_1) \ =\\
+  & \hspace{100pt} = \ \frac{2^{2n} \cdot 2^n \cdot (2^{2n} - 2)!}{(2^{2n})!}\\
+  & \hspace{100pt} = \ \frac{2^n}{2^{2n}-1} \ \leq \ \frac{2^n}{2^{2n}-2^n} \ = \ \frac{1}{2^n-1}.
+\end{align*}
+Entonces se tiene que:
+\begin{align*}
+  &\Pr(\text{Adversario gane el juego}) \ =\\
+  &\hspace{10pt}\frac{1}{2} \cdot \Pr(\text{Adversario gane el juego} \mid b=0) + \frac{1}{2} \cdot \Pr(\text{Adversario gane el juego} \mid b=1) \ \geq\\
+  &\hspace{10pt}\frac{1}{2} + \frac{1}{2} \cdot \bigg(1 - \frac{1}{2^n-1}\bigg).
+\end{align*}
+Por lo tanto, $\Pr(\text{Adversario gane el juego}) \geq \frac{1}{2} + g(n)$, donde $g(n) = \frac{1}{2} \cdot \big(1 - \frac{1}{2^n-1}\big)$ es una función no despreciable. 
+Tenemos entonces que  el esquema definido en esta pregunta no es una PRP con $2$
+rondas.
+\end{enumerate}

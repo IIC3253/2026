@@ -1,0 +1,75 @@
+%!TEX root = ../main/main.tex
+
+Responda las siguientes preguntas.
+\begin{enumerate}
+\item {[3 puntos]} Sea $\M=\K=\C=\{0, 1\}^n$ y considere el esquema criptográfico $(\Gen, \Enc, \textit{Dec})$ donde $\Enc$ y $\textit{Dec}$ son definidos tal como en OTP, pero $\Gen$ \textbf{no} es la distribución uniforme. Demuestre que este esquema criptográfico no es perfectamente secreto.
+
+\item {[3 puntos]} Formalice la siguiente afirmación y demuestre que un sistema criptográfico la satisface si y sólo si dicho esquema cumple que es perfectamente secreto:
+\begin{center}
+  \it{La probabilidad de ver un texto cifrado $c\in \C$ sin conocimiento previo es igual a la probabilidad de ver $c$ conociendo el mensaje enviado de antemano.}
+  \end{center}
+\end{enumerate}
+
+
+\paragraph{Solución.} 
+\begin{enumerate}
+  \item
+    Sean $(\Gen, \Enc, \textit{Dec})$ definidos de acuerdo al enunciado. Para demostrar que este esquema \textbf{no} es perfectamente secreto, tenemos que mostrar que existe una distribución de probabilidad $\mathbb{D}$ sobre $\M$, un texto cifrado $c$ y un mensaje $m$ tales que
+
+    $$\underset{ \begin{array}{cc} m\sim\mathbb{D}\\ k\sim\Gen \end{array} } {\Pr}[m=m_0\ |\ \Enc_k(m)=c_0]\quad \neq \quad \underset{m\sim \mathbb{D}} {\Pr}[m=m_0] $$
+
+    Sea $\mathbb{D}$ la distribución uniforme. Sea $k_0\in\K$ tal que $\Gen(k_0) > 1/|\K|$. Sabemos que $k_0$ existe dado que $\Gen$ no es la distribución uniforme. Sea $m_0\in\M$ un mensaje cualquiera y $c_0=\Enc_{k_0}(m_0)$. Comenzamos calculando el lado izquierdo utilizando la igualdad $\Pr(A|B)=\Pr(A\cap B)/\Pr(B)$.
+    $$\underset{ \begin{array}{cc} m\sim\mathbb{D}\\ k\sim\Gen \end{array} } {\Pr}[m=m_0\ |\ \Enc_k(m)=c_0] = \frac{\underset{ \begin{array}{cc} m\sim\mathbb{D}\\ k\sim\Gen \end{array} } {\Pr}[m=m_0\ \land \ \Enc_k(m)=c_0]}{\underset{ \begin{array}{cc} m\sim\mathbb{D}\\ k\sim\Gen \end{array} } {\Pr}[\Enc_k(m)=c_0]}$$
+
+    El numerador es simplemente la probabilidad de que el mensaje sea $m_0$ y que al encriptar $m_0$ obtengamos $c_0$. Dada la definición de OTP, sabemos que existe una sola llave que encripta $m_0$ en $c_0$, que es $k_0$. Por lo tanto el numerador es $\mathbb{D}(m_0)\Gen(k_0)=\frac{1}{|\M|}\Gen(k_0)$.
+
+    Por otro lado, calculamos el denominador sumando:
+    $$\underset{ \begin{array}{cc} m\sim\mathbb{D}\\ k\sim\Gen \end{array} } {\Pr}[\Enc_k(m)=c_0]=\sum_{k\in\K}\Gen(k)\left[\sum_{m\in\M \, : \, \Enc_k(m)=c_0} \frac{1}{|\M|}\right]$$
+
+    Nuevamente, por la definición de OTP sabemos que dada una llave $k$ existe un único mensaje $m$ tal que $\Enc_k(m)=c_0$. Luego lo anterior es igual a
+
+    $$\frac{1}{|\M|}\sum_{k\in\K}\Gen(k)=\frac{1}{|\M|}$$
+
+    Recapitulando, tenemos
+    $$\underset{ \begin{array}{cc} m\sim\mathbb{D}\\ k\sim\Gen \end{array} } {\Pr}[m=m_0\ |\ \Enc_k(m)=c_0] = \frac{\frac{1}{|\M|}\cdot \Gen(k_0)}{\frac{1}{|\M|}}=\Gen(k_0)$$
+
+    Esto concluye la demostración, dado que 
+    $$\underset{ \begin{array}{cc} m\sim\mathbb{D}\\ k\sim\Gen \end{array} } {\Pr}[m=m_0\ |\ \Enc_k(m)=c_0] =\Gen(k_0)>\frac{1}{|\K|}=\frac{1}{|\M|}=\mathbb{D}(m_0)=\underset{m\sim \mathbb{D}} {\Pr}[m=m_0].$$
+
+  \item
+    Formalizamos la noción mencionada diciendo que para cualquier distribución de probabilidad $\mathbb{D}$ que tenga el atacante, cualquier texto cifrado $c_0\in\C$ y cualquier mensaje $m_0\in\M$, tenemos que
+    \begin{equation}
+      \label{eq:alt-perfect-secrecy}
+      \underset{ \begin{array}{cc} m\sim\mathbb{D}\\ k\sim\Gen \end{array} } {\Pr}[\Enc_k(m)=c_0\ |\ m=m_0]=\underset{ \begin{array}{cc} m\sim\mathbb{D}\\ k\sim\Gen \end{array} } {\Pr}[\Enc_k(m)=c_0]
+    \end{equation}
+
+    Queremos demostrar que un esquema $(\Gen, \Enc, \textit{Dec})$ cumple esta condición sí y sólo si cumple con la definición de perfectamente secreto, que dice que para cualquier distribución de probabilidad $\mathbb{D}$ que tenga el atacante, cualquier texto cifrado $c_0\in\C$ y cualquier mensaje $m_0\in\M$, se cumple
+    \begin{equation}
+      \label{eq:perfect-secrecy}
+      \underset{ \begin{array}{cc} m\sim\mathbb{D}\\ k\sim\textit{Gen} \end{array} } {\Pr}[m=m_0\ |\ \textit{Enc}_k(m)=c_0]\quad = \quad \underset{m\sim \mathbb{D}} {\Pr}[m=m_0]
+    \end{equation}
+
+    Comenzamos con $\eqref{eq:alt-perfect-secrecy}\Rightarrow\eqref{eq:perfect-secrecy}$. Usaremos la igualdad $\Pr[A|B]=\frac{\Pr[B|A]\Pr[A]}{\Pr[B]}$ sobre el lado izquierdo de la ecuación~\eqref{eq:perfect-secrecy}.
+    \begin{equation*}
+      \eqref{eq:perfect-secrecy}\quad = \quad \frac{\underset{ \begin{array}{cc} m\sim\mathbb{D}\\ k\sim\textit{Gen} \end{array} } {\Pr}[\textit{Enc}_k(m)=c_0\ |\ m=m_0]\cdot \underset{ \begin{array}{cc} m\sim\mathbb{D}\\ k\sim\textit{Gen} \end{array} } {\Pr}[m=m_0]}{\underset{ \begin{array}{cc} m\sim\mathbb{D}\\ k\sim\textit{Gen} \end{array} } {\Pr}[\textit{Enc}_k(m)=c_0]}
+    \end{equation*}
+
+    Usando la ecuación~\eqref{eq:alt-perfect-secrecy}, tenemos que lo anterior es igual a
+    \begin{equation*}
+     \quad \frac{\underset{ \begin{array}{cc} m\sim\mathbb{D}\\ k\sim\textit{Gen} \end{array} } {\Pr}[\textit{Enc}_k(m)=c_0]\cdot \underset{ \begin{array}{cc} m\sim\mathbb{D}\\ k\sim\textit{Gen} \end{array} } {\Pr}[m=m_0]}{\underset{ \begin{array}{cc} m\sim\mathbb{D}\\ k\sim\textit{Gen} \end{array} } {\Pr}[\textit{Enc}_k(m)=c_0]}\quad = \quad \underset{ \begin{array}{cc} m\sim\mathbb{D}\\ k\sim\textit{Gen} \end{array} } {\Pr}[m=m_0]
+    \end{equation*}
+
+    Lo cual concluye la primera dirección. Ahora demostraremos que $\eqref{eq:perfect-secrecy}\Rightarrow\eqref{eq:alt-perfect-secrecy}$. Usaremos la misma igualdad $\Pr[A|B]=\frac{\Pr[B|A]\Pr[A]}{\Pr[B]}$ sobre el lado izquierdo de la ecuación~\eqref{eq:alt-perfect-secrecy}.
+
+    \begin{equation*}
+      \eqref{eq:alt-perfect-secrecy}\quad = \quad \frac{\underset{ \begin{array}{cc} m\sim\mathbb{D}\\ k\sim\textit{Gen} \end{array} } {\Pr}[m=m_0\ |\ \textit{Enc}_k(m)=c_0]\cdot \underset{ \begin{array}{cc} m\sim\mathbb{D}\\ k\sim\textit{Gen} \end{array} } {\Pr}[\textit{Enc}_k(m)=c_0]}{\underset{ \begin{array}{cc} m\sim\mathbb{D}\\ k\sim\textit{Gen} \end{array} } {\Pr}[m=m_0]}
+    \end{equation*}
+
+    Usando la ecuación~\eqref{eq:perfect-secrecy}, lo anterior es igual a
+
+    \begin{equation*}
+      \frac{\underset{ \begin{array}{cc} m\sim\mathbb{D}\\ k\sim\textit{Gen} \end{array} } {\Pr}[m=m_0]\cdot \underset{ \begin{array}{cc} m\sim\mathbb{D}\\ k\sim\textit{Gen} \end{array} } {\Pr}[\textit{Enc}_k(m)=c_0]}{\underset{ \begin{array}{cc} m\sim\mathbb{D}\\ k\sim\textit{Gen} \end{array} } {\Pr}[m=m_0]}\quad = \quad \underset{ \begin{array}{cc} m\sim\mathbb{D}\\ k\sim\textit{Gen} \end{array} } {\Pr}[\Enc_k(m)=c_0]
+    \end{equation*}
+
+    Lo cual concluye la demostración.
+\end{enumerate}

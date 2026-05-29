@@ -4,7 +4,7 @@ En esta pregunta deberá demostrar la correctitud de la formula de Garner, la cu
 
 Sean $(e,N)$ y $(d,N)$ un par de llaves RSA pública y privada (respectivamente), con $N=P\cdot Q$. 
 \begin{enumerate}
-	\item \text{[2 puntos]} Demuestre que para cada par de números $x_1\in\{0,\ldots,P-1\}$ y $x_2\in\{0,\ldots,Q-1\}$, si existe un número $x\in\{0,\ldots,N-1\}$ tal que $x\equiv_P x_1$ y $x\equiv_Q x_2$, dicho número es el único que cumple tal condición. %Esto es un caso particular del teorema chino de los restos; por supuesto, no utilice dicho teorema.
+	\item \text{[2 puntos]} Demuestre que para cada par de números $x_1\in\{0,\ldots,P-1\}$ y $x_2\in\{0,\ldots,Q-1\}$, si existe un número $x\in\{0,\ldots,N-1\}$ tal que $x\equiv_P x_1$ y $x\equiv_Q x_2$, dicho número es el único que cumple tal condición. Esto es un caso particular del teorema chino de los restos. No utilice dicho teorema en la demostración.
 	\item \text{[2 puntos]} Demuestre que para cada texto cifrado $c\in\{1,\ldots,N\}$, su correspondiente texto plano se puede calcular como
 	$$m=\big(c^d\cdot P\cdot (P^{-1}\!\!\!\mod Q) + c^d\cdot Q\cdot (Q^{-1}\!\!\!\mod P)\big) \!\!\mod N$$
 	\item \text{[2 puntos]} Demuestre que para cada mensaje cifrado $c\in\{1,\ldots,N\}$, su correspondiente texto plano se puede calcular como

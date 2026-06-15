@@ -1,0 +1,74 @@
+%!TEX root = ../main/main.tex
+
+En esta pregunta usted deberá utilizar su código de la pregunta 2 para participar en una encuesta anónima (pero en serio) sobre este curso. Utilizaremos el tag \texttt{IIC3253-2026} y el grupo $\mathbb{Z}_p^*$ con los siguientes parámetros:
+
+\begin{eqnarray*}
+	g & = & 80413673270461893026939846650267063748446082898743744257287976695094358814591\\
+	&&40662650215832833471328470334064628508692231999401840332046192569287351991689\\
+	&&96327965689256248477327858420804098763156962852046406953236127404737444434499\\
+	&&66518329793783188499437416621103959957784292708192224316109273560059138369324\\
+	&&62099770076239554042855287138026806960470277326229482818003962004453764400995\\
+	&&79097404266367569212075872614586906123644389350913614794241444555184816239146\\
+	&&85414443557077856978257418568491612338873070174283718236081256998929049608412\\
+	&&21593344499088996021883972185241854777608212592397013510086894908468466292313\\
+	q & = & 63762351364972653564641699529205510489263266834182771617563631363277932854227\\
+	p & = & 17125458317614137930196041979257577826408832324037508573393292981642667139747\\
+	&&62177880243877523872859296834461358937993234847561350347693216316697381321869\\
+	&&83438164632891441853629126025225404949830905314972329658295365245072698488256\\
+	&&58311420299335922295709743267508322525966773950394919257576842038771632742044\\
+	&&14247105350985012360588381585716266691777519349615737265619555830572700989127\\
+	&&60065140004093658772181713883199238963093777917625906143118496429613802248519\\
+	&&40460421710449368927252974870395873936387909672274883295377481008150475878590\\
+	&&270591798350563488168080923804611822387520198054002990623911454389104774092183\\
+\end{eqnarray*}
+
+\begin{enumerate}
+\item \text{[0.5 puntos]} El día miércoles 17 de junio se publicará en el issue de anuncios del curso una URL a la cual usted debe enviar un request \texttt{POST} cuyo \emph{body} siga el siguiente esquema:
+$$\texttt{\{public\_key: number, hmac: string\}}$$
+\texttt{public\_key} es su llave pública para participar en la encuesta. \texttt{hmac} es la representación hexadecimal de \texttt{HMAC-SHA256(symmetric\_key, public\_key)}, donde \texttt{symmetric\_key} es la llave simétrica que hemos utilizado a lo largo del curso para encriptar sus notas.
+
+Este endpoint responderá con los siguientes códigos:
+\begin{itemize}
+	\item 201 Su request se procesa correctamente.
+	\item 422 La llave pública o el \texttt{hmac} no están en el formato correcto.
+	\item 401 El input está en el formato correcto pero el \texttt{hmac} no es válido.
+	\item 409 Todo es correcto pero ya se había enviado una llave pública cuyo \texttt{hmac} se había generado con esa llave simétrica.
+	\item 403 Todo es correcto pero esa llave pública ya fue inscrita anteriormente con otro \texttt{hmac}.
+\end{itemize}
+
+\textbf{Usted debe enviar un request al cual se responda con código \texttt{201} antes del viernes 19 de junio a las 11:59pm.}
+\\
+\\
+\textbf{Importante: No habrá segundas oportunidades, cuide su llave secreta.}
+
+\item \text{[0.5 puntos]} El día sábado 20 de junio se publicará en el issue de anuncios del curso una URL para obtener, en orden, todas las llaves públicas que se enviaron de acuerdo a la pregunta anterior. También se publicará una URL para \emph{votar} en la encuesta del curso. Usted deberá enviar un request \texttt{POST} a esta URL con un \emph{body} que siga el siguiente esquema:
+\begin{verbatim}
+{
+    voto: {nps: number, chachara: string, comentario: string},
+    firma: [[number], number, number]},
+}
+\end{verbatim}
+
+\begin{itemize}
+\item \texttt{nps} debe ser un número entero entre 1 y 10 que responda a la pregunta: ``De 1 a 10, qué puntaje le pondría a este curso'', dónde 1 es el menor puntaje y 10 el mayor.
+\item \texttt{chachara} debe ser un string en el conjunto $\{\texttt{marcelo}, \texttt{martin}\}$ que indique cuál de los dos profesores explica de forma más extensa (le mete más cháchara).
+\item \texttt{comentario} es un string de a lo más 500 caracteres en el que usted puede dejar los comentarios que quiera, con la única restricción de que no se debe hacer referencia a otros estudiantes o profesores de la universidad que no sean los del curso. En tal caso su voto no será considerado ni tendrá oportunidad de enviar otro voto.
+\item \texttt{firma} es una firma de anillo enlazable de acuerdo a lo descrito en la pregunta anterior y el tag \texttt{IIC3253-2026}. El mensaje a firmar es el \texttt{voto} en formato JSON interpretado como un string, formateado sin saltos de línea, sin espacios fuera del comentario y con comillas dobles, exactamente como se muestra en el siguiente ejemplo:
+	$$\texttt{\{nps:10,chachara:"marcelo",comentario:"muy buen curso"\}}$$
+\end{itemize}
+
+El endpoint responderá con los siguientes códigos:
+\begin{itemize}
+	\item[201] El voto es recibido correctamente.
+	\item[422] El esquema de su request es inválido.
+	\item[401] El esquema de su request es válido pero la firma es inválida.
+	\item[409] El esquema es válido y la firma es válida, pero dicha firma se generó con una llave secreta con la que se había firmado y enviado otro voto válido anteriormente.
+\end{itemize}
+
+Para que su voto sea considerado debe enviar un request cuya respuesta tenga código 201.
+
+\item \text{[1 punto]} En esta pregunta grupal, usted obtendrá puntaje de acuerdo a cómo se comporte el
+curso al responder la encuesta. Suponga que el número de personas que enviaron su clave pública es $M$, y
+que el número de encuestas válidas recibidas hasta la fecha de entrega de la tarea es $V$. Si usted
+envió su clave pública dentro del plazo, entonces recibirá $\frac{V}{M}$ puntos en esta pregunta.
+\end{enumerate}

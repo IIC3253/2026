@@ -1,0 +1,120 @@
+En esta tarea usted deberá implementar un protocolo \textbf{enlazable} de firmas de
+anillo, vale decir, un protocolo de firma de anillo donde se puede detectar si dos firmas
+fueron hechas por la misma persona.\footnote{En este protocolo no se puede identificar a la persona
+que hizo dos firmas de anillo. Si esto fuera posible entonces el protocolo sería rastreable.} Este protocolo
+estará basado en las firmas de Schnorr y el protocolo de
+firmas de anillo vistos en clases.
+
+Desde ahora en adelante suponga que los siguientes objetos son públicos: un grupo $(G, *)$ con elemento neutro $e$,
+un elemento $g \in G$, un número primo $q$ tal que $|\langle
+g\rangle| = q$, una función de hash $h$ que dado un string produce un número natural, y una función de hash $h_G$ que
+dado un string produce un elemento del grupo $G$. Por ejemplo, la función $h$ puede ser SHA256, interpretando el output de esta función como un número natural entre $0$ y $2^{256}-1$. De la misma forma, si consideramos el grupo $(Z_n, +)$ para
+$n \geq 2^{256}$, entonces $h_G$ también podría ser la función SHA256 puesto que los elementos del grupo también son números.
+
+Recuerde que una firma de Schnorr se define de la siguiente
+forma.  La clave secreta de un
+usuario $A$ es un número $x_A \in \{1, \ldots, q -1\}$ y su clave
+pública es el elemento del grupo $y_A = g^{x_A}$. Si el
+usuario $A$ quiere generar una firma de Schnorr para un mensaje $m$,
+entonces debe realizar los siguientes pasos:
+\begin{enumerate}
+\item Genera al azar $r \in \{1, \ldots, q-1\}$ y calcula $c = h(g^r \| m)$ considerando
+$g^r$ como un string.
+
+\item Calcula $s = r + c \cdot x_A$.
+
+\item Define $(c, s)$ como la firma de Schnorr de $m$.
+\end{enumerate}
+Un usuario $B$ puede verificar si $(c,s)$ es una firma del mensaje
+$m$ hecha por el usuario $A$ chequeando que la siguiente condición se
+cumpla:
+\begin{align*}
+c \ = \ h((g^s * y_A^{q-c}) \| m).
+\end{align*}
+Utilizando este protocolo, mostraremos cómo se define una firma de anillo enlazable para un
+conjunto de cuatro participantes. Posteriormente, usted deberá generalizar la construcción al
+caso de un número arbitrario de participantes.
+
+Suponga que los participantes generarán firmas de anillo asociadas a un evento específico,
+como una encuesta o una elección presidencial. Cada evento está identificado mediante un tag $t$,
+representado por un string. Por ejemplo, el tag correspondiente a las
+elecciones municipales de Chile de 2028 podría ser \texttt{"Elección municipal Chile 2028"}.
+Observe que eventos distintos deben utilizar etiquetas distintas, ya que estas actúan como
+identificadores únicos.
+
+Además, suponga que se ha establecido un orden entre los participantes y que todas las firmas
+de anillo se generarán respetando dicho orden. Sean $1$, $2$, $3$ y $4$ los participantes que
+generarán firmas de anillo. La clave secreta del usuario $i$ es $x_i$, mientras que su clave
+pública es $y_i = g^{x_i}$. Finalmente, suponiendo que $r = \frac{|G|}{q}$ y considerando
+cada clave pública $y_i$ como un string, defina:
+\begin{align*}
+T \ = \ h_G(y_1 \| y_2 \| y_3 \| y_4 \| t)^r.
+\end{align*}
+Dada la definición de $h_G$, se tiene que $T \in G$. Si $T = e$ (el elemento neutro del grupo), entonces
+se debe utilizar un tag distinto para el evento hasta lograr que $T \neq e$. Observe que esto asegura que
+$|\langle T \rangle| = q$.
+
+Una vez definidos el tag $t$, las claves secretas y públicas de los participantes, y el elemento $T$ del grupo,
+las firmas de anillo para este evento se generan de la siguiente forma.
+Si el usuario $2$ quiere generar una firma de anillo de un mensaje $m$, define $f = T^{x_2}$ y realiza
+los siguientes pasos:
+\begin{enumerate}
+\item Genera al azar $r_2 \in \{1, \ldots, q-1\}$ y calcula $c_3 = h(g^{r_2} \| m \| T^{r_2} )$.
+
+\item Genera al azar $s_3 \in \{1, \ldots, q-1\}$.
+
+\item Calcula $c_4 = h((g^{s_3} * y_3^{q - c_3}) \| m \| (T^{s_3} * f^{q - c_3}))$.
+
+\item Genera al azar $s_4 \in \{1, \ldots, q-1\}$.
+
+\item Calcula $c_1 = h((g^{s_4} * y_4^{q - c_4}) \| m \| (T^{s_4} * f^{q - c_4}))$.
+
+\item Genera al azar $s_1 \in \{1, \ldots, q-1\}$.
+
+\item Calcula $c_2 = h((g^{s_1} * y_1^{q - c_1}) \| m \| (T^{s_1} * f^{q - c_1}))$.
+
+\item Calcula $s_2 = r_2 + c_2 \cdot x_2$. Note que este paso lo puede realizar el usuario $2$ ya que
+conoce la clave secreta $x_2$.
+
+\item Define $(s_1, s_2, s_3, s_4, c_1, f)$ como la firma de anillo de $m$. En particular, siempre se incluye $c_1$ en la
+firma, independientemente de quién la haya generado.
+\end{enumerate}
+Note que cuando un participante genera una firma de anillo debe respetar el orden preestablecido. Por ejemplo, si el
+usuario 3 quiere firmar, entonces debe realizar el protocolo en el orden $3 \to 4 \to 1 \to 2 \to 3$.
+Además, note que como fue mencionado en clases, basta que la firma incluya los valores $s_1$, $s_2$, $s_3$, $s_4$
+y un valor $c_i$ para verificar que es correcta. En este caso, este valor siempre será $c_1$, de manera tal de no
+entregar información sobre quién generó la firma. Finalmente, observe que se incluye en la firma un valor $f$ adicional
+que será utilizado para la enlazabilidad.
+
+Si un usuario $B$ quiere verificar que $(s_1, s_2, s_3, s_4, c_1, f)$ es una firma
+de anillo válida para el tag $t$ y el grupo formado por los usuarios $1$, $2$, $3$ y $4$, entonces debe hacer lo siguiente:
+\begin{enumerate}
+	\item Calcula $T \ = \ h_G(y_1 \| y_2 \| y_3 \| y_4 \| t)^r$, donde $r = \frac{|G|}{q}$
+	\item Calcula $c_2=h((g^{s_1} * y_1^{q - c_1}) \| m \| (T^{s_1} * f^{q - c_1}))$
+	\item Calcula $c_3=h((g^{s_2} * y_2^{q - c_2}) \| m \| (T^{s_2} * f^{q - c_2}))$
+	\item Calcula $c_4=h((g^{s_3} * y_3^{q - c_3}) \| m \| (T^{s_3} * f^{q - c_3}))$
+	\item Verifica si $h((g^{s_4} * y_4^{q - c_4}) \| m \| (T^{s_4} * f^{q - c_4}))$
+	es igual al valor $c_1$ de la firma.
+\end{enumerate}
+Si esta última condición es cierta, entonces $B$ sabe
+que la firma es válida, pero no sabe cuál de los usuarios firmó el
+mensaje $m$.
+
+Además, $B$ puede verificar si dos firmas fueron hechas por el mismo participante de la siguiente forma.
+Si un usuario $i$ firma dos mensajes $m_1$ y $m_2$, entonces la firma de $m_1$
+es de la forma $(s_1, s_2, s_3, s_4, c_1, f)$ y la firma de $m_2$ es de la forma
+$(s'_1, s'_2, s'_3, s'_4, c'_1, f)$, donde en ambos casos $f =  T^{x_i}$. De hecho, todas las firmas de anillo
+del usuario $i$ para este evento y este grupo van a tener como último componente $f = T^{x_i}$. De esta forma, $B$ puede
+verificar si dos firmas fueron hechas por el mismo participante simplemente chequeando que las últimas
+componentes en estas firmas son iguales.
+
+Finalmente, observe que el protocolo anterior sólo nos permite verificar si dos firmas de anillo fueron generadas
+por el mismo usuario en el mismo evento. En particular,
+un participante puede generar firmas de anillo para eventos distintos sin que ellas sean identificadas como hechas
+por la misma persona. En efecto, si consideramos dos eventos
+distintos con tags $t_1 \neq t_2$, entonces esperamos que $T_1 \neq T_2$ puesto que estamos usando
+una función de hash $h_G$ que es resistente a colisiones. De esta forma, una firma de anillo de un participante $i$ en
+el primer evento es de la forma $(s_1, s_2, s_3, s_4, c_1, f_1)$ con $f_1 = T_1^{x_i}$, mientras que una firma
+de anillo en el segundo evento es de la forma $(s'_1, s'_2, s'_3, s'_4, c'_1, f_2)$ con $f_2 = T_2^{x_i}$.
+Como $f_1 \neq f_2$, puesto que $T_1 \neq T_2$, estas firmas no pueden ser reconocidas como hechas por
+el mismo participante.

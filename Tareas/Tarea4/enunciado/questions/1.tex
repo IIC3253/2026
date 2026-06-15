@@ -1,0 +1,24 @@
+%!TEX root = ../main/main.tex
+
+Responda las siguientes preguntas.
+\begin{enumerate}
+\item \text{[0.5 puntos]} Para el caso de cuatro participantes, demuestre que si el participante 3 construye una firma
+$(s_1, s_2, s_3, s_4, c_1, f)$ de un mensaje $m$ utilizando el protocolo, entonces el proceso
+de verificación concluye que la firma es válida.
+
+\item \text{[0.5 puntos]} Un participante $i$ podría tratar de ocultar que generó dos firmas utilizando $f = T^{x_i}$ en una de las
+firmas, y un elemento arbitrario $f' \in G$ con $f' \neq f$ en la otra firma. Considerando nuevamente el caso con cuatros
+participantes, explique por qué el participante 1 no podría generar una firma válida si utiliza un elemento $f' \in G$
+tal que $f' \neq T^{x_1}$.
+
+\item \text{[0.5 puntos]} Demuestre que $|\langle T \rangle| = q$.
+
+\item \text{[0.5 puntos]} Suponga que modificamos el protocolo de manera que el elemento $T$ usado en el protocolo es generado por
+una tercera parte; por ejemplo, este elemento $T$ podría ser generado por el Servel en caso de una elección o por los
+profesores del curso en el caso de esta tarea. Muestre que, en este caso, el protocolo puede ser quebrado. En particular,
+muestre que esta tercera parte puede generar eficientemente un elemento $T \in G$ tal que $|\langle T \rangle| = q$, $T \neq g$
+y, si $T$ se utiliza en la generación de firmas de anillo, entonces puede determinar eficientemente quién
+generó cada firma.
+\end{enumerate}
+
+\medskip

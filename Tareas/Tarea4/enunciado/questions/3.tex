@@ -44,8 +44,8 @@ Este endpoint responderá con los siguientes códigos:
 \item \text{[0.5 puntos]} El día sábado 20 de junio se publicará en el issue de anuncios del curso una URL para obtener, en orden, todas las llaves públicas que se enviaron de acuerdo a la pregunta anterior. También se publicará una URL para \emph{votar} en la encuesta del curso. Usted deberá enviar un request \texttt{POST} a esta URL con un \emph{body} que siga el siguiente esquema:
 \begin{verbatim}
 {
-    voto: {nps: number, chachara: string, comentario: string},
-    firma: [[number], number, number]},
+    "voto": {"nps": number, "chachara": string, "comentario": string},
+    "firma": {"s": [number], "c": number, "f": number}
 }
 \end{verbatim}
 
@@ -54,7 +54,7 @@ Este endpoint responderá con los siguientes códigos:
 \item \texttt{chachara} debe ser un string en el conjunto $\{\texttt{marcelo}, \texttt{martin}\}$ que indique cuál de los dos profesores explica de forma más extensa (le mete más cháchara).
 \item \texttt{comentario} es un string de a lo más 500 caracteres en el que usted puede dejar los comentarios que quiera, con la única restricción de que no se debe hacer referencia a otros estudiantes o profesores de la universidad que no sean los del curso. En tal caso su voto no será considerado ni tendrá oportunidad de enviar otro voto.
 \item \texttt{firma} es una firma de anillo enlazable de acuerdo a lo descrito en la pregunta anterior y el tag \texttt{IIC3253-2026}. El mensaje a firmar es el \texttt{voto} en formato JSON interpretado como un string, formateado sin saltos de línea, sin espacios fuera del comentario y con comillas dobles, exactamente como se muestra en el siguiente ejemplo:
-	$$\texttt{\{nps:10,chachara:"marcelo",comentario:"muy buen curso"\}}$$
+	$$\texttt{\{"nps":10,"chachara":"marcelo","comentario":"muy buen curso"\}}$$
 \end{itemize}
 
 El endpoint responderá con los siguientes códigos:

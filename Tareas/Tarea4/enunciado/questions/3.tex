@@ -41,7 +41,7 @@ Este endpoint responderá con los siguientes códigos:
 \\
 \textbf{Importante: No habrá segundas oportunidades, cuide su llave secreta.}
 
-\item \text{[0.5 puntos]} El día sábado 20 de junio se publicará en el issue de anuncios del curso una URL para obtener, en orden, todas las llaves públicas que se enviaron de acuerdo a la pregunta anterior. También se publicará una URL para \emph{votar} en la encuesta del curso. Usted deberá enviar un request \texttt{POST} a esta URL con un \emph{body} que siga el siguiente esquema:
+\item \text{[0.5 puntos]} El día sábado 20 de junio se publicará en el issue de anuncios del curso una URL para obtener, en orden, todas las llaves públicas que se enviaron de acuerdo a la pregunta anterior. El lunes 22 se publicará URL para \emph{votar} en la encuesta del curso. Usted deberá enviar un request \texttt{POST} a esta URL con un \emph{body} que siga el siguiente esquema:
 \begin{verbatim}
 {
     "voto": {"nps": number, "chachara": string, "comentario": string},

@@ -1,0 +1,26 @@
+%!TEX root = ../main/main.tex
+
+En esta pregunta deberá demostrar la correctitud de la formula de Garner, la cual se utiliza para decriptar mensajes usando RSA en OpenSSH. Recuerde que usamos la notación $a^{-1}\!\!\mod b$ para referirnos al inverso de $a$ en módulo $b$.
+
+Sean $(e,N)$ y $(d,N)$ un par de llaves RSA pública y privada (respectivamente), con $N=P\cdot Q$. 
+\begin{enumerate}
+	\item \text{[2 puntos]} Demuestre que para cada par de números $x_1\in\{0,\ldots,P-1\}$ y $x_2\in\{0,\ldots,Q-1\}$, si existe un número $x\in\{0,\ldots,N-1\}$ tal que $x\equiv_P x_1$ y $x\equiv_Q x_2$, dicho número es el único que cumple tal condición. Esto es un caso particular del teorema chino de los restos. No utilice dicho teorema en la demostración.
+	\item \text{[2 puntos]} Demuestre que para cada texto cifrado $c\in\{1,\ldots,N\}$, su correspondiente texto plano se puede calcular como
+	$$m=\big(c^d\cdot P\cdot (P^{-1}\!\!\!\mod Q) + c^d\cdot Q\cdot (Q^{-1}\!\!\!\mod P)\big) \!\!\mod N$$
+	\item \text{[2 puntos]} Demuestre que para cada mensaje cifrado $c\in\{1,\ldots,N\}$, su correspondiente texto plano se puede calcular como
+	$$m=c^d\!\!\!\mod Q + \big(\big[(c^d\!\!\!\mod P - c^d\!\!\!\mod Q)\cdot (Q^{-1}\!\!\!\mod P)\big] \!\!\!\! \mod P\big) \cdot Q$$
+	Esta fórmula se conoce como la fórmula de Garner, y es lo que se utiliza en la práctica para firmar y decriptar mensajes usando RSA.
+\end{enumerate}
+
+\medskip
+
+\paragraph{Corrección.} La asignación de puntajes para cada pregunta de este problema es la siguiente.
+\begin{enumerate}
+      \item Tiene 1 punto si la idea de la demostración está correcta pero la formalización está incompleta o con errores menores, y tiene 2 puntos si la demostración está completamente correcta. En esta pregunta no recibe puntaje si utiliza el teorema chino de los restos para realizar la demostración. 
+
+      \item Tiene 1 punto si la idea de la demostración está correcta pero la formalización está incompleta o con errores menores, y tiene 2 puntos si la demostración está completamente correcta. Para resolver esta pregunta se puede utilizar la pregunta (a) aunque no la haya resuelto correctamente, o hacer referencia al teorema chino de los restos.
+
+\item Tiene 1 punto si la idea de la demostración está correcta pero la formalización está incompleta o con errores menores, y tiene 2 puntos si la demostración está completamente correcta. Para resolver esta pregunta se puede utilizar la pregunta (a) aunque no la haya resuelto correctamente, o hacer referencia al teorema chino de los restos. 
+\end{enumerate}
+
+

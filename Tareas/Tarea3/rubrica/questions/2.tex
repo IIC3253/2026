@@ -1,0 +1,103 @@
+%!TEX root = ../main/main.tex
+
+En esta pregunta usted deberá mostrar la correctitud del protocolo RSA entre múltiples partes y luego programar una clase que represente a un participante de dicho protocolo. El objetivo de este protocolo es permitir a un grupo de participantes comunicarse de tal forma que todo participante del grupo puede encriptar mensajes que puede decriptar cualquier participante del grupo.\\
+
+El protocolo RSA entre múltiples partes funciona de la siguiente forma: Supongamos que tenemos $\ell$ participantes. Cada participante $i\in\{1,\ldots,\ell\}$ genera dos primos grandes $P_i$ y $Q_i$ al azar y comparte su \emph{módulo} $N_i=P_i\cdot Q_i$. Luego el grupo verifica que todos los $N_i$ sean primos relativos; de lo contrario el protocolo comienza de nuevo. Finalmente, el grupo se pone de acuerdo en un \emph{exponente público} $e\in\{1,\ldots,\min(N_1,\ldots,N_\ell)\}$ (se puede sacar al azar) y verifican que sea primo relativo con $\phi(N_i)$ para cada $i$. Si no lo es, el protocolo elige un nuevo valor $e\in\{1,\ldots,\min(N_1,\ldots,N_\ell)\}$ y se repite el procedimiento. Definimos la \emph{llave pública} para encriptar como $(e,N_1,N_2,\ldots,N_\ell)$.
+
+Si un participante $i\in\{1,\ldots,\ell\}$ quiere encriptar un mensaje $m\in\{0,\ldots,\min(N_1,\ldots,N_\ell)-1\}$, primero debe calcular, para cada $j\in\{1,\ldots,\ell\}$, el valor $N_{-j}$ que es la multiplicación de todos los valores $N_k$ con $k\in\{1,\ldots,\ell\}\setminus\{j\}$. Luego, computa $M_j=N_{-j}^{-1}\!\!\mod N_j$. Finalmente, envía el mensaje 
+$$c=(m^e \!\!\! \mod N_1) \cdot M_1\cdot N_{-1} + (m^e \!\!\! \mod N_2)\cdot M_2\cdot N_{-2} + \cdots + (m^e \!\!\! \mod N_\ell)\cdot M_\ell\cdot N_{-\ell}$$
+
+\begin{enumerate}
+	\item \text{[2 puntos]} Explique cómo puede un participante decriptar el mensaje $c$. Explique cómo se vería su llave secreta y demuestre que el protocolo es correcto (es decir, al decriptar se obtiene el mensaje original). Es importante que su protocolo pueda ser implementado con la interfaz que se describe en la pregunta (b).
+        %Aquí sí puede utilizar el teorema chino de los restos.
+	\item \text{[4 puntos]} Escriba una clase en Python que represente a un participante de este protocolo. En particular, su clase deberá respetar al menos la siguiente interfaz.
+	\begin{python}
+	class MultiPartyRSAParticipant:
+		def __init__(self, bit_length: int) -> None:
+			# Initializes P, Q and N such that N has at least bit_length and at most bit_length + 1 bits
+
+		def get_N(self):
+			# Returns N
+
+		def join_group(self, public_exponent: int, group_moduli: List[int]) -> boolean:
+      # Raises an AssertionError if a group has already been joined.
+			# Verifies that N occurs exactly once in group_moduli and that all other moduli are coprime with N. Otherwise, returns False.
+			# Verifies that e is coprime with (P - 1)(Q - 1). Otherwise, returns False.
+			# Precomputes and stores all relevant information for encryption and decryption, then returns True.
+
+		def enc(self, m: int) -> int:
+			# Encrypt m according to the multiparty RSA protocol. If no group has been joined raise an AssertionError.
+		
+		def dec(self, c: int) -> int:
+			# Decrypt c according to the multiparty RSA protocol. If no group has been joined raise an AssertionError.
+	\end{python}
+
+
+	A continuación se muestra un bloque de código que utiliza la clase anterior, ejemplificando el funcionamiento del protocolo:
+
+	\begin{python}
+		import random
+
+		participant_number = 5
+		bit_length = 2048
+
+		participants = []
+		for i in range(participant_number):
+			participants.append(MultiPartyRSAParticipant(bit_length))
+
+		moduli = [p.get_N() for p in participants]
+		public_exponent = random.randint(1, min(moduli))
+
+		for p in participants:
+			p.join_group(public_exponent, moduli)
+
+		encryptor = random.choice(participants)
+
+		plaintext = random.randint(0, min(moduli) - 1)
+		cyphertext = encryptor.enc(plaintext)
+
+		for p in participants:
+			if p.dec(cyphertext) != message:
+				raise AssertionError("Incorrect decryption")
+
+		print("All good")
+		
+	\end{python}
+\end{enumerate}
+
+\medskip
+
+\paragraph{Corrección.} La asignación de puntajes para cada pregunta de este problema es la siguiente.
+\begin{enumerate}
+      \item Tiene 1 punto por indicar cómo se calcula la clave secreta de cada participante, y tiene 1 punto por demostrar correctamente que un participante puede descifrar un mensaje cifrado utilizando su clave secreta.
+
+\item La corrección de esta pregunta va a estar basado en el siguiente conjunto de tests.
+\begin{itemize}
+\item \text{[0.25 puntos]} Al inicializar un participante con un valor \texttt{bit\_length}, el valor $N$ generado debe ser de la forma $N = P \cdot Q$, donde $P$ y $Q$ son primos, y $N$ debe tener al menos \texttt{bit\_length} bits y a lo más \texttt{bit\_length + 1} bits.
+
+\item \text{[0.25 puntos]} Si se utiliza \texttt{enc} antes de que el participante haya ingresado exitosamente a un grupo mediante \texttt{join\_group}, se debe obtener una excepción.
+
+\item \text{[0.25 puntos]} Si se utiliza \texttt{dec} antes de que el participante haya ingresado exitosamente a un grupo mediante \texttt{join\_group}, se debe obtener una excepción.
+
+\item \text{[0.25 puntos]} Si se utiliza \texttt{join\_group} con una lista \texttt{group\_moduli} en la que el valor $N$ del participante no aparece, se debe retornar \texttt{False}.
+
+\item \text{[0.25 puntos]} Si se utiliza \texttt{join\_group} con una lista \texttt{group\_moduli} en la que el valor $N$ del participante aparece dos veces, se debe retornar \texttt{False}.
+
+\item \text{[0.25 puntos]} Si se utiliza \texttt{join\_group} con una lista \texttt{group\_moduli} que contiene algún valor distinto de $N$ que no es primo relativo con $N$, se debe retornar \texttt{False}.
+
+\item \text{[0.25 puntos]} Si se utiliza \texttt{join\_group} con un exponente público $e$ que no es primo relativo con $\varphi(N) = (P - 1)(Q - 1)$, se debe retornar \texttt{False}.
+
+\item \text{[0.25 puntos]} Si un participante ya ingresó exitosamente a un grupo mediante el método \texttt{join\_group}, un segundo llamado a \texttt{join\_group} sobre el mismo participante debe producir una excepción.
+
+\item \text{[1 punto]} Para un grupo válido de $\ell$ participantes, si un participante instanciado utilizando su código cifra un mensaje $m \in \{0, \ldots, \min(N_1,\ldots,N_\ell)-1\}$ utilizando \texttt{enc}, entonces todos los participantes que sigan correctamente el protocolo deben ser capaces de descifrar dicho mensaje.
+
+% se debe cumplir lo siguiente para el texto cifrado $c$:
+% \begin{multline*}
+% c \ =\ (m^e \!\!\! \mod N_1) \cdot M_1\cdot N_{-1} + (m^e \!\!\! \mod N_2)\cdot M_2\cdot N_{-2} + \cdots\\
+% \cdots + (m^e \!\!\! \mod N_\ell)\cdot M_\ell\cdot N_{-\ell}.
+% \end{multline*}
+
+\item \text{[1 punto]} Para un grupo válido de $\ell$ participantes, si $c$ es el resultado de cifrar un mensaje $m \in \{0, \ldots, \min(N_1,\ldots,N_\ell)-1\}$ por un participante instanciado utilizando su código, entonces todos los participantes del grupo deben recuperar exactamente $m$ al utilizar \texttt{dec} con entrada $c$.
+\end{itemize}
+\end{enumerate}
+

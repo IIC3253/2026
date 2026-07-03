@@ -1,0 +1,6 @@
+Considere un esquema criptográfico donde $\textit{Enc}_k : \{0,1\}^n \to \{0,1\}^n$ y $\textit{Dec}_k :\{0,1\}^n \to \{0,1\}^n$ para cada $k \in \{0,1\}^n$. Además suponga que este esquema se extiende a mensajes de largo $2n$ de la siguiente forma. Dada una clave $k \in \{0,1\}^n$, un texto plano $m = m_1 \| m_2$ con $m_1, m_2 \in \{0,1\}^n$, y un texto cifrado $c = c_1 \| c_2$ con $c_1, c_2 \in \{0,1\}^n$, se tiene que:
+\begin{align*}
+\textit{Enc}_k(m) \ &= \ \textit{Enc}_k(m_1) \| \textit{Enc}_k(m_2)\\
+\textit{Dec}_k(c) \ &= \ \textit{Dec}_k(c_1) \| \textit{Dec}_k(c_2)
+\end{align*}
+Demuestre que este esquema criptográfico para mensajes de largo $2n$ no es una PRP con una ronda.

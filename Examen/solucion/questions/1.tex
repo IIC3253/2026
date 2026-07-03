@@ -1,0 +1,22 @@
+Considere un esquema criptográfico donde $\textit{Enc}_k : \{0,1\}^n \to \{0,1\}^n$ y $\textit{Dec}_k :\{0,1\}^n \to \{0,1\}^n$ para cada $k \in \{0,1\}^n$. Además suponga que este esquema se extiende a mensajes de largo $2n$ de la siguiente forma. Dada una clave $k \in \{0,1\}^n$, un texto plano $m = m_1 \| m_2$ con $m_1, m_2 \in \{0,1\}^n$, y un texto cifrado $c = c_1 \| c_2$ con $c_1, c_2 \in \{0,1\}^n$, se tiene que:
+\begin{align*}
+\textit{Enc}_k(m) \ &= \ \textit{Enc}_k(m_1) \| \textit{Enc}_k(m_2)\\
+\textit{Dec}_k(c) \ &= \ \textit{Dec}_k(c_1) \| \textit{Dec}_k(c_2)
+\end{align*}
+Demuestre que este esquema criptográfico para mensajes de largo $2n$ no es una PRP con una ronda.
+
+\paragraph{Solución.} En este caso el adversario elige la palabra $m = 0^n \| 0^n$. Si el verificador responde con un cifrado $c = c_1 \| c_2$ tal que $c_1 = c_2$, entonces el adversario dice que el verificador está usando la función de cifrado ($b=0$), y en caso contrario dice que el verificador está usando una permutación sacada al azar ($b=1$).
+Se tiene que:
+\begin{multline*}
+\Pr(\text{Adversario gane el juego}) \ =\\ 
+\Pr(\text{Adversario gane el juego} \mid b=0) \cdot \Pr(b=0) \ +\\
+\Pr(\text{Adversario gane el juego} \mid b=1) \cdot \Pr(b=1)
+\end{multline*}
+Cuando $b = 0$ el adversario siempre gana. Cuando $b = 1$, el adversario pierde el juego si para una permutación $\pi : \{0,1\}^{2n} \to \{0,1\}^{2n}$ sacada al azar, se tiene que $\pi(m) = c_1 \| c_2$ con $c_1 = c_2$. Esta probabilidad es igual a
+\begin{align*}
+\frac{2^n \cdot (2^{2n}-1)!}{2^{2n}!} \ = \ \frac{1}{2^{n}}
+\end{align*}
+Por lo tanto tenemos que el adversario gana el juego con una probabilidad significativamente mayor a $\frac{1}{2}$, puesto que:
+\begin{align*}
+\Pr(\text{Adversario gane el juego}) \ = \ 1 \cdot \frac{1}{2} + \bigg(1 - \frac{1}{2^n}\bigg) \cdot \frac{1}{2} \ = \ 1 - \frac{1}{2^{n+1}}.
+\end{align*}

@@ -1,0 +1,3 @@
+Para firmar un mensaje $m$ usando firmas de Schnorr, primero generamos un elemento $r\in\{1,\ldots,q-1\}$ al azar y luego calculamos $c=h(g^r||m)$ y $s=r+c\cdot x$ para finalmente enviar la firma $(c, s)$.  Explique cómo se puede verificar esta firma, y qué necesita un usuario para hacer esta verificación.
+
+\emph{Recuerde qué $h$ es una función de hash criptográfica y $x$ es la llave secreta.}

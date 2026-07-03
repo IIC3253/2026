@@ -1,0 +1,5 @@
+Para firmar un mensaje $m$ usando firmas de Schnorr, primero generamos un elemento $r\in\{1,\ldots,q-1\}$ al azar y luego calculamos $c=h(g^r||m)$ y $s=r+c\cdot x$ para finalmente enviar la firma $(c, s)$.  Explique cómo se puede verificar esta firma, y qué necesita un usuario para hacer esta verificación.
+
+\emph{Recuerde qué $h$ es una función de hash criptográfica y $x$ es la llave secreta.}
+
+\paragraph{Solución.} Para verificar esta firma, un usuario necesita la llave pública $y=g^x$ y el orden $q$ del subgrupo generado por $g$. Con esto, puede calcular $\alpha=y^{q-c}$, luego $\beta=g^s\cdot\alpha$ y finalmente verificar si $c=h(\beta|| m)$. Esto funciona puesto que $\alpha=y^{q-c}=g^{x\cdot q}*g^{-c\cdot x}=g^{-c\cdot x}$ y por tanto $\beta=g^r*g^{c\cdot x}*g^{-c\cdot x}=g^r$.

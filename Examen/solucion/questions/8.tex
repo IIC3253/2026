@@ -1,0 +1,5 @@
+En el protocolo criptográfico denominado ElGamal, encriptamos un mensaje $m$ seleccionando un elemento $r\in\{1,\ldots,q-1\}$ al azar y calculando $s=g^{x\cdot r}$, $c_1=g^r$ y $c_2=m\cdot s$. El texto cifrado se define como $(c_1, c_2)$. Explique cómo se puede descifrar el mensaje original $m$, y qué necesita un usuario para realizar este descifrado.
+
+\emph{Recuerde qué $x$ es la llave secreta.}
+
+\paragraph{Solución.} Para decriptar el mensaje original $m$ un usuario necesita la llave secreta $x$ y el orden del subgrupo generado por $g$, denominado $q$. Con esto, puede obtener el mensaje original calculando $c_2*c_1^{q-x}$ puesto que esto es igual a $m*s*(g^r)^{q-x}=m*s*g^{r\cdot q-r\cdot x}=m*s*g^{-r\cdot x}=m*s*s^{-1}=m$.
